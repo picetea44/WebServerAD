@@ -1,0 +1,78 @@
+{% load static %}
+<!-- 네비게이션바 -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <a class="navbar-brand" href="{% url 'pybo:index' %}">Pybo</a>
+    <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse flex-grow-0" id="navbarNav">
+        <!-- Search form -->
+        <form class="form-inline my-2 my-lg-0 mr-3" action="{% url 'pybo:search' %}" method="get">
+            <div class="input-group">
+                <input class="form-control" type="search" placeholder="검색어 입력" name="kw" value="{{ kw|default_if_none:'' }}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-success" type="submit">검색</button>
+                </div>
+            </div>
+        </form>
+        <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if user.profile.profile_picture %}
+                    <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" width="30" height="30">
+                    {% else %}
+                    <img src="{% static 'default_profile.svg' %}" alt="Default Profile" class="rounded-circle" width="30" height="30">
+                    {% endif %}
+                    {{ user.username }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'common:profile' %}">프로필</a>
+                    <a class="dropdown-item" href="{% url 'common:profile_update' %}">프로필 수정</a>
+                    {% if user.is_staff %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'admin:index' %}">관리자 페이지</a>
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'common:logout' %}">로그아웃</a>
+                </div>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'common:login' %}">로그인</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'common:signup' %}">회원가입</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    {% if user.is_authenticated %}
+    <!-- Chat icon positioned at the right side -->
+    <div class="ml-auto mr-3 position-relative d-flex align-items-center">
+        <div class="nav-item dropdown">
+            <a id="chat-toggle" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="bi bi-chat-dots chat-icon"></i>
+            </a>
+            <div id="chat-dropdown" class="dropdown-menu dropdown-menu-right chat-dropdown" aria-labelledby="chat-toggle">
+                <div id="chat-container" class="chat-container">
+                    <div id="chat-header" class="chat-header">
+                        <span id="chat-partner">Loading...</span>
+                    </div>
+                    <div id="chat-messages" class="chat-messages">
+                        <div class="loading-message">Loading messages...</div>
+                    </div>
+                    <div id="chat-input-container" class="chat-input-container">
+                        <input id="chat-input" type="text" placeholder="Type a message..." class="chat-input">
+                        <button id="chat-send" class="chat-send-btn">
+                            <i class="bi bi-send"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</nav>

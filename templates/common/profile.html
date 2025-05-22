@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container my-3">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture"
+                                 class="rounded-circle img-fluid mb-3" style="max-width: 150px;">
+                        {% else %}
+                            <img src="{% static 'default_profile.svg' %}" alt="Default Profile"
+                                 class="rounded-circle img-fluid mb-3" style="max-width: 150px;">
+                        {% endif %}
+                        <h3>{{ profile.user.username }}</h3>
+                        <p class="text-muted">
+                            {% if profile.user.first_name or profile.user.last_name %}
+                                {{ profile.user.first_name }} {{ profile.user.last_name }}
+                            {% endif %}
+                        </p>
+                        <p>{{ profile.user.email }}</p>
+                        {% if user == profile.user %}
+                            <a href="{% url 'common:profile_update' %}" class="btn btn-primary">프로필 수정</a>
+                        {% else %}
+                            <a href="#"
+                               class="btn btn-sm btn-outline-primary chat-with-btn"
+                               data-user-id="{{ profile.user.id }}"
+                               data-partner="{{ profile.user.username }}">
+                                채팅하기
+                            </a>
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>활동 내역</h4>
+                    </div>
+                    <div class="card-body">
+                        <h5>작성한 질문</h5>
+                        <ul>
+                            {% for question in profile.user.author_question.all %}
+                                <li><a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a></li>
+                            {% empty %}
+                                <li>작성한 질문이 없습니다.</li>
+                            {% endfor %}
+                        </ul>
+
+                        <h5>작성한 답변</h5>
+                        <ul>
+                            {% for answer in profile.user.author_answer.all %}
+                                <li>
+                                    <a href="{% url 'pybo:detail' answer.question.id %}">{{ answer.question.subject }}</a>
+                                </li>
+                            {% empty %}
+                                <li>작성한 답변이 없습니다.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

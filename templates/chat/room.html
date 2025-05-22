@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% endblock %}
+
+{% block script %}
+<script>
+  // base.html에 이미 포함돼 있는 chat_widget.js 재사용
+  window.addEventListener("DOMContentLoaded", () => {
+      window.openChatRoom({{ room_id|safe }});
+  });
+</script>
+{% endblock %}

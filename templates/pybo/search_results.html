@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load pybo_filter %}
+{% block content %}
+<div class="container my-3">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h2>검색 결과: "{{ kw }}"</h2>
+            {% if question_list %}
+            <p>{{ question_list.count }} 개의 결과를 찾았습니다.</p>
+            {% else %}
+            <p>검색 결과가 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row">
+        {% if question_list %}
+        {% for question in question_list %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if question.image %}
+                <img src="{{ question.image.url }}" class="card-img-top" alt="질문 이미지" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <span class="text-muted">이미지 없음</span>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
+                    </h5>
+                    <p class="card-text text-truncate">{{ question.content }}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <a href="{% url 'common:profile_user' question.author.id %}">
+                                {% if question.author.profile.profile_picture %}
+                                <img src="{{ question.author.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle mr-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                {% else %}
+                                <div class="rounded-circle mr-2 bg-secondary d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; color: white;">
+                                    {{ question.author.username.0|upper }}
+                                </div>
+                                {% endif %}
+                            </a>
+                            <a href="{% url 'common:profile_user' question.author.id %}" class="text-muted">
+                                <small>{{ question.author.username }}</small>
+                            </a>
+                        </div>
+                        <small class="text-muted">{{ question.create_date }}</small>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <div>
+                            {% if question.voter.all.count > 0 %}
+                            <span class="badge badge-warning px-2 py-1">추천 {{ question.voter.all.count }}</span>
+                            {% endif %}
+                            {% if question.answer_set.count > 0 %}
+                            <span class="badge badge-danger px-2 py-1">답변 {{ question.answer_set.count }}</span>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted">
+                            번호: {% reverse_index paginator.count page_obj.start_index forloop.counter0 %}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">검색 결과가 없습니다. 다른 검색어를 입력해보세요.</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 페이징 처리 -->
+    <ul class="pagination justify-content-center">
+        <!-- 이전 페이지 -->
+        {% if page_obj.number > 5 %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.number|add:"-5" }}{% if kw %}&kw={{ kw }}{% endif %}">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">이전</a>
+        </li>
+        {% endif %}
+
+        <!-- 페이지 번호 -->
+        {% for page_num in page_obj.paginator.page_range %}
+        {% if page_num >= page_obj.number|add:-2 and page_num <= page_obj.number|add:2 %}
+        {% if page_num == page_obj.number %}
+        <li class="page-item active">
+            <a class="page-link" href="?page={{ page_num }}{% if kw %}&kw={{ kw }}{% endif %}">{{ page_num }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_num }}{% if kw %}&kw={{ kw }}{% endif %}">{{ page_num }}</a>
+        </li>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+
+        <!-- 다음 페이지 -->
+        {% if page_obj.paginator.num_pages > page_obj.number|add:"5" %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.number|add:"5" }}{% if kw %}&kw={{ kw }}{% endif %}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <a href="{% url 'pybo:index' %}" class="btn btn-secondary">메인으로 돌아가기</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

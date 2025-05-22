@@ -1,0 +1,40 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% if user.is_authenticated %}
+    <meta name="current-user" content="{{ user.username }}">
+    {% endif %}
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <!-- Bootstrap Icons (말풍선·썸네일 아이콘) -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <title>단고</title>
+</head>
+<body>
+{% include "navbar.html" %}
+
+<!-- 페이지별 콘텐츠 -->
+{% block content %}
+{% endblock %}
+
+<!-- ────────────────────────────── -->
+
+<!-- jQuery & Bootstrap JS -->
+<script src="{% static 'jquery-3.4.1.min.js' %}"></script>
+<script src="{% static 'bootstrap.min.js' %}"></script>
+
+<!-- 채팅 위젯 스크립트 -->
+<script src="{% static 'js/chat_widget.js' %}"></script>
+
+{% block script %}{% endblock %}
+</body>
+</html>
