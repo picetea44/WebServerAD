@@ -126,3 +126,21 @@ def question_delete(request, question_id):
     """
     view = QuestionDeleteView.as_view()
     return view(request, question_id=question_id)
+
+@login_required(login_url='common:login')
+def question_create(request):
+    """
+    pybo 질문등록
+    """
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.author = request.user  # 추가한 속성 author 적용
+            question.create_date = timezone.now()
+            question.save()
+            return redirect('pybo:index')
+    else:
+        form = QuestionForm()
+    context = {'form': form}
+    return render(request, 'pybo/question_form.html', context)
