@@ -49,7 +49,7 @@
 
 1. 저장소 클론
 ```bash
-git clone <repository-url>
+git clone https://github.com/picetea44/WebServerAD.git
 cd ADProject
 ```
 
@@ -98,15 +98,3 @@ http://127.0.0.1:8000/
 - **chat**: 실시간 채팅 기능 애플리케이션
 - **common**: 사용자 관리 및 프로필 기능 애플리케이션
 - **config**: 프로젝트 설정 (ASGI 및 Daphne 설정 포함)
-
-## 기여 방법
-
-1. 이슈 생성 또는 기존 이슈 확인
-2. 브랜치 생성 (`git checkout -b feature/issue-number`)
-3. 변경 사항 커밋 (`git commit -m '기능 추가 또는 수정'`)
-4. 브랜치 푸시 (`git push origin feature/issue-number`)
-5. Pull Request 생성
-
-## 라이센스
-
-이 프로젝트는 [라이센스 이름] 라이센스 하에 배포됩니다. 자세한 내용은 LICENSE 파일을 참조하세요.
